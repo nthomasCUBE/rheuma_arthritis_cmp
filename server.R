@@ -17,7 +17,7 @@ server <- function(input, output, session)
 		print("goButton")
 
 		source("methods.R")
-		parse_content(input$file1$datapath)
+		parse_content(input$file1$datapath,input$file2$datapath)
 	})
 	
 	observeEvent(input$goButton,{

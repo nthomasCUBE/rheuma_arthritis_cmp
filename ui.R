@@ -6,7 +6,7 @@ library(shinyjs)
 library(shinythemes)
 
 options(stringsAsFactors=FALSE)
-options(shiny.maxRequestSize = 50*1024^2)
+options(shiny.maxRequestSize = 100*1024^2)
 
 ui <- fluidPage(  
 tags$head(
