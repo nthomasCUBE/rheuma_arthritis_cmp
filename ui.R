@@ -27,6 +27,7 @@ body, label, input, button, select {
 		tabsetPanel(id = "tabset",
 		tabPanel("WGCNA analysis data",
 			fileInput("file1", "Insert the file", multiple = TRUE, accept = c(".txt")),
+			fileInput("file2", "Insert the file", multiple = TRUE, accept = c(".tsv")),
 			actionButton("goButton", "Analyse dataset!"))
 		)),
 		mainPanel(
