@@ -1,3 +1,5 @@
+options(stringsAsFactors=FALSE)
+
 library(d3heatmap)
 library(officer)
 library(shiny)

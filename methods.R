@@ -1,3 +1,5 @@
+options(stringsAsFactors=FALSE)
+
 print_modules=function(d1){
 	u_cols=unique(d1[,1])
 	for(x in 1:length(u_cols)){
@@ -18,7 +20,6 @@ parse_content=function(cluster_file,expr_file){
 		print(dim(d1))
 	}
 
-	my_dark_green=subset(d1,d1[,1]=="darkgreen")
 
 	print("------------------------------------------------")
 	print(paste0("parse_content::",expr_file))
@@ -30,21 +31,42 @@ parse_content=function(cluster_file,expr_file){
 	}
 	print("------------------------------------------------")
 
-	d2_expr=subset(d2,d2[,1]%in%my_dark_green[,2])
-	print(dim(d2_expr))
-	print(colnames(d2_expr))
-
-	ix1=grep("longRAF",colnames(d2_expr))
-	ix2=grep("longRAM",colnames(d2_expr))
+	all_mods=unique(d1[,1])
 	
-	A=c()
-	B=c()
-	for(x in 1:dim(d2_expr)){
-		val1=as.numeric(d2_expr[x,ix1])
-		val2=as.numeric(d2_expr[x,ix2])
-		A=c(A,mean(val1))
-		B=c(B,mean(val2))
+	my_comp1=c("longRAF","earlyRAF")
+	my_comp2=c("longRAM","earlyRAM")
+
+	print("start...")
+	df=data.frame()
+	for(mo in 1:length(all_mods)){
+		cur_mod=subset(d1,d1[,1]==all_mods[mo])
+		d2_expr=subset(d2,d2[,1]%in%cur_mod[,2])
+		for(mc in 1:length(my_comp1)){
+			ix1=grep(my_comp1[mc],colnames(d2_expr))
+			ix2=grep(my_comp2[mc],colnames(d2_expr))
+
+			A=c(); B=c()
+			for(x in 1:dim(d2_expr)[1]){
+				val1=as.numeric(d2_expr[x,ix1])
+				val2=as.numeric(d2_expr[x,ix2])
+				A=c(A,mean(val1))
+				B=c(B,mean(val2))
+			}
+			my_wx=(wilcox.test(A,B,paired=TRUE)$p.value)
+			my_t=(t.test(A,B,paired=TRUE)$p.value)
+			if(my_wx<0.05 && my_t<0.05){
+				df=rbind(df,c(all_mods[mo],my_comp1[mc],my_t,my_wx))
+			}
+		}
 	}
-	print(t.test(A,B)$p.value)
-	print(wilcox.test(A,B)$p.value)
-}	
+
+	df=cbind(df,p.adjust(df[,3]))
+	df=cbind(df,p.adjust(df[,4]))
+
+	library(xlsx)
+	colnames(df)=c("module","comparison","t.test","wilcox.test_paired","t.test_adj","wilcox.test_paired_adj")
+	write.xlsx(df,"alex_sign_comp.xlsx")
+	print("ended...")
+}
+
+
