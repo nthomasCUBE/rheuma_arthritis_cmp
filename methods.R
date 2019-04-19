@@ -45,6 +45,8 @@ parse_content=function(cluster_file,expr_file){
 	print(colnames(d2))
 
 	df=data.frame()
+	pdf("hist.pdf")
+	par(mfrow=c(3,3))
 	for(mo in 1:length(all_mods)){
 		cur_mod=subset(d1,d1[,1]==all_mods[mo])
 		d2_expr=subset(d2,d2[,1]%in%cur_mod[,2])
@@ -62,9 +64,12 @@ parse_content=function(cluster_file,expr_file){
 			my_wx=(wilcox.test(A,B,paired=TRUE)$p.value)
 			my_t=(t.test(A,B,paired=TRUE)$p.value)
 			df=rbind(df,c(all_mods[mo],my_comp1[mc],my_t,my_wx))
+			plot(log(1+A),log(1+B),xlim=c(0,max(log(1+A),log(1+B))),ylim=c(0,max(log(1+A),log(1+B))),cex=0.2,main=paste0(all_mods[mo],"_",my_comp1[mc]))
+			legend("top",legend=c(my_comp1[mc],my_comp2[mc]))
 		}
 	}
-
+	dev.off()
+	
 	df=cbind(df,p.adjust(df[,3]))
 	df=cbind(df,p.adjust(df[,4]))
 	df=subset(df,df[,5]<0.05 | df[,6]<0.05)
