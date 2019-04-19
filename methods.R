@@ -1,5 +1,8 @@
 options(stringsAsFactors=FALSE)
 
+#
+#	Module assignment
+#
 print_modules=function(d1){
 	u_cols=unique(d1[,1])
 	for(x in 1:length(u_cols)){
@@ -9,16 +12,19 @@ print_modules=function(d1){
 	}
 }
 
+#
+#	Extraction of the WGCNA content and of the expression data
+#
 parse_content=function(cluster_file,expr_file){
 	print("------------------------------------------------")
 	print(paste0("parse_content::",cluster_file))
 	if(!exists("d1")){
 		d1<<-read.csv(cluster_file,sep=" ",header=T)
-		print_modules(d1)
 	}else{
 		print(paste0("d1 already exists"))
 		print(dim(d1))
 	}
+	print_modules(d1)
 
 
 	print("------------------------------------------------")
@@ -36,7 +42,8 @@ parse_content=function(cluster_file,expr_file){
 	my_comp1=c("longRAF","earlyRAF")
 	my_comp2=c("longRAM","earlyRAM")
 
-	print("start...")
+	print(colnames(d2))
+
 	df=data.frame()
 	for(mo in 1:length(all_mods)){
 		cur_mod=subset(d1,d1[,1]==all_mods[mo])
@@ -54,19 +61,21 @@ parse_content=function(cluster_file,expr_file){
 			}
 			my_wx=(wilcox.test(A,B,paired=TRUE)$p.value)
 			my_t=(t.test(A,B,paired=TRUE)$p.value)
-			if(my_wx<0.05 && my_t<0.05){
-				df=rbind(df,c(all_mods[mo],my_comp1[mc],my_t,my_wx))
-			}
+			df=rbind(df,c(all_mods[mo],my_comp1[mc],my_t,my_wx))
 		}
 	}
 
 	df=cbind(df,p.adjust(df[,3]))
 	df=cbind(df,p.adjust(df[,4]))
+	df=subset(df,df[,5]<0.05 | df[,6]<0.05)
 
 	library(xlsx)
 	colnames(df)=c("module","comparison","t.test","wilcox.test_paired","t.test_adj","wilcox.test_paired_adj")
 	write.xlsx(df,"alex_sign_comp.xlsx")
+	
+	print("start...")
 	print("ended...")
+
+	print(df)
+
 }
-
-
