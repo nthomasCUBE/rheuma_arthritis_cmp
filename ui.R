@@ -10,6 +10,8 @@ library(shinythemes)
 options(stringsAsFactors=FALSE)
 options(shiny.maxRequestSize = 100*1024^2)
 
+rm("d1"); rm("d2"); rm("d3")
+
 ui <- fluidPage(  
 tags$head(
 	tags$style(HTML("
@@ -30,7 +32,10 @@ body, label, input, button, select {
 		tabPanel("WGCNA analysis data",
 			fileInput("file1", "Insert the file", multiple = TRUE, accept = c(".txt")),
 			fileInput("file2", "Insert the file", multiple = TRUE, accept = c(".tsv")),
-			actionButton("goButton", "Analyse dataset!"))
+			actionButton("goButton", "Analyse dataset!")),
+		tabPanel("Density plot",
+			fileInput("file3", "Insert the file", multiple = TRUE, accept = c(".tsv")),
+			actionButton("goButton2", "Analyse dataset!"))
 		)),
 		mainPanel(
 			useShinyjs(),

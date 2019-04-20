@@ -1,6 +1,43 @@
 options(stringsAsFactors=FALSE)
 
 #
+#
+#
+density_plot_analysis=function(expr_file){
+	print("density plot analysis")
+	if(!exists("d3")){
+		d3<<-read.csv(expr_file,sep="\t",header=T)
+	}
+	d3_sub=d3[,3:dim(d3)[2]]
+	for(x in 1:dim(d3_sub)[2]){
+		d3_sub[,x]=as.numeric(d3_sub[,x])
+	}
+
+	earlyRAF=grep("earlyRAF",colnames(d3))
+	earlyRAF=apply(d3[,earlyRAF],1,median)
+
+	earlyRAM=grep("earlyRAM",colnames(d3))
+	earlyRAM=apply(d3[,earlyRAM],1,median)
+
+	lateRAF=grep("longRAF",colnames(d3))
+	lateRAF=apply(d3[,lateRAF],1,median)
+
+	lateRAM=grep("longRAM",colnames(d3))
+	lateRAM=apply(d3[,lateRAM],1,median)
+	
+	df=data.frame(earlyRAF,earlyRAM,lateRAF,lateRAM)
+	print(head(df))
+	print(summary(df))
+	
+	library(kdensity)
+	plot(kdensity(df[,1],kernel="normal"),cex=0,type="o")
+	for(x in 2:dim(df)[2]){
+		points(kdensity(df[,x],kernel="normal"),cex=0,type="o")
+	}
+}
+
+
+#
 #	Module assignment
 #
 print_modules=function(d1){

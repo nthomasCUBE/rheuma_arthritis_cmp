@@ -17,12 +17,15 @@ server <- function(input, output, session)
 	observeEvent(input$goButton,{
 		print(input$file1$datapath)
 		print("goButton")
-
 		source("methods.R")
 		parse_content(input$file1$datapath,input$file2$datapath)
 	})
 	
-	observeEvent(input$goButton,{
+	observeEvent(input$goButton2,{
+		print(c("density plot analysis"))
 		source("methods.R")
+		output$plot=renderPlot({
+			density_plot_analysis(input$file3$datapath)
+		});
 	})
 }
