@@ -18,7 +18,9 @@ server <- function(input, output, session)
 		print(input$file1$datapath)
 		print("goButton")
 		source("methods.R")
-		parse_content(input$file1$datapath,input$file2$datapath)
+		output$plot=renderPlot({
+			parse_content(input$file1$datapath,input$file2$datapath)
+		});
 	})
 	
 	observeEvent(input$goButton2,{
@@ -28,4 +30,13 @@ server <- function(input, output, session)
 			density_plot_analysis(input$file3$datapath)
 		});
 	})
+
+	observeEvent(input$goButton3,{
+		print(c("density plot analysis"))
+		source("methods.R")
+		output$plot=renderPlot({
+			make_correlation(input$file4$datapath)
+		});
+	})
+
 }

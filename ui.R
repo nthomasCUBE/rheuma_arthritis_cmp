@@ -1,5 +1,6 @@
 options(stringsAsFactors=FALSE)
 
+library(corrplot)
 library(d3heatmap)
 library(shiny)
 library(shinyalert)
@@ -10,7 +11,7 @@ library(shinythemes)
 options(stringsAsFactors=FALSE)
 options(shiny.maxRequestSize = 100*1024^2)
 
-rm("d1"); rm("d2"); rm("d3")
+#rm("d1"); rm("d2"); rm("d3")
 
 ui <- fluidPage(  
 tags$head(
@@ -35,7 +36,10 @@ body, label, input, button, select {
 			actionButton("goButton", "Analyse dataset!")),
 		tabPanel("Density plot",
 			fileInput("file3", "Insert the file", multiple = TRUE, accept = c(".tsv")),
-			actionButton("goButton2", "Analyse dataset!"))
+			actionButton("goButton2", "Analyse dataset!")),
+		tabPanel("Correlation plots",
+			fileInput("file4", "Insert the file ('eigengenes_WCGNA_31aug18')", multiple = TRUE, accept = c(".txt")),
+			actionButton("goButton3", "Analyse dataset!"))
 		)),
 		mainPanel(
 			useShinyjs(),
