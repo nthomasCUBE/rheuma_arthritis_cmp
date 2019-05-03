@@ -7,13 +7,13 @@ function(){
 	
 	if(!exists("expr")){
 		print("loading expr...")
-		expr<<-read.csv("C:/Users/thoma/Google Drive/mirror_TN_VM/mirror/data/combinedFPKMs_highestTranscripts.txt",sep="\t",header=T)
+		expr<<-read.csv("combinedFPKMs_highestTranscripts.txt",sep="\t",header=T)
 		print(dim(expr))
 	}
 
 	if(!exists("modul")){
 		print("loading modul...")
-		modul<<-read.csv("C:/Users/thoma/Google Drive/mirror_TN_VM/mirror/2_WGCNA/gene_WGCNA_clustering_pooled_3sep18.txt",sep=" ",header=T)
+		modul<<-read.csv("gene_WGCNA_clustering_pooled_3sep18.txt",sep=" ",header=T)
 		print(dim(modul))
 	}
 
