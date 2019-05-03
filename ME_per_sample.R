@@ -1,5 +1,7 @@
 function(){
 
+	library(WGCNA)
+
 	options(stringsAsFactors=FALSE)
 	
 	if(!exists("expr")){
@@ -16,11 +18,13 @@ function(){
 
 	u_cls=unique(modul[,1])
 	for(x in 1:length(u_cls)){
+		print(u_cls[x])
 		my_g=subset(modul,modul[,1]==u_cls[x])
 		my_e=subset(expr,expr[,2]%in%my_g[,2])
 		my_e=my_e[,3:(dim(my_e)[2]-3)]
-		print(summary(my_e))
-		barplot(apply(my_e,2,sum))
-		exit
+		MEList = moduleEigengenes(my_e,rep("yellow",dim(my_e)[2]))
+		MEs = MEList$eigengenes
+		#plotEigengeneNetworks(MEs, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2))
+
 	}
 }
