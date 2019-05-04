@@ -17,7 +17,6 @@ ME_per_sample=function(){
 		print(dim(modul))
 	}
 
-
 	DF=data.frame()
 	u_cls=unique(modul[,1])
 	my_E=data.frame()
@@ -28,7 +27,8 @@ ME_per_sample=function(){
 		my_e=subset(expr,expr[,1]%in%my_g[,2])
 		my_e=my_e[,3:(dim(my_e)[2]-3)]
 		my_E=rbind(my_E,my_e)
-		my_C=c(my_C,dim(my_e)[2])
+		my_C=c(my_C,rep(u_cls[x],dim(my_e)[1]))
 	}
 	MEList = moduleEigengenes(t(my_E),my_C)
+	write.xlsx(MEList$eigengene,"DF2_V2_4may19.xlsx")
 }
